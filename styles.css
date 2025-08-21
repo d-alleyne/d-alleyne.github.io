@@ -241,6 +241,11 @@ body {
     justify-content: center;
 }
 
+.hero-buttons .btn {
+    min-width: 140px;
+    text-align: center;
+}
+
 .hero-image {
     display: flex;
     justify-content: center;
