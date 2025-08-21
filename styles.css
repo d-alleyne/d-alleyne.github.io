@@ -247,8 +247,10 @@ body {
 }
 
 .profile-pic {
-    width: 280px;
-    height: 280px;
+    width: min(280px, 70vw);
+    height: min(280px, 70vw);
+    max-width: 280px;
+    max-height: 280px;
     border-radius: 50%;
     border: 4px solid var(--primary-color);
     transition: var(--transition);
@@ -724,8 +726,9 @@ section {
     }
     
     .profile-pic {
-        width: 220px;
-        height: 220px;
+        width: min(220px, 60vw);
+        height: min(220px, 60vw);
+        border-width: 3px;
     }
     
     .building-grid,
@@ -759,6 +762,12 @@ section {
     
     .section-title {
         font-size: var(--font-size-2xl);
+    }
+    
+    .profile-pic {
+        width: min(180px, 50vw);
+        height: min(180px, 50vw);
+        border-width: 2px;
     }
     
     .building-card,
