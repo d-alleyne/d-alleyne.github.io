@@ -374,11 +374,7 @@ section {
     gap: var(--spacing-6);
 }
 
-.building-single {
-    max-width: 500px;
-    margin: 0 auto;
-    grid-template-columns: 1fr;
-}
+
 
 .building-card {
     background-color: var(--surface-color);
@@ -657,6 +653,7 @@ section {
     .hero-buttons {
         flex-direction: column;
         align-items: center;
+        gap: var(--spacing-3);
     }
     
     .profile-pic {
