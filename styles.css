@@ -383,12 +383,35 @@ section {
     text-align: center;
     transition: var(--transition);
     border: 1px solid var(--border-color);
+    position: relative;
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
 
-.building-card:hover {
+/* Clickable card styles */
+.building-card-clickable {
+    cursor: pointer;
+}
+
+.building-card-clickable:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Non-clickable card styles */
+.building-card-non-clickable {
+    cursor: default;
+    opacity: 0.9;
+}
+
+.building-card-non-clickable:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border-color);
 }
 
 .card-icon {
@@ -419,6 +442,35 @@ section {
     margin-top: var(--spacing-3);
     text-align: center;
     border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Card badges and external link icons */
+.card-external-link {
+    position: absolute;
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    transition: var(--transition);
+    font-weight: 600;
+}
+
+.building-card-clickable:hover .card-external-link {
+    color: var(--primary-color);
+    transform: translateX(2px) translateY(-2px);
+}
+
+.card-badge {
+    position: absolute;
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-1) var(--spacing-2);
+    font-weight: 500;
 }
 
 /* Links Section */
