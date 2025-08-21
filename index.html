@@ -30,6 +30,7 @@
     
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="https://github.com/d-alleyne.png" as="image">
 </head>
 <body>
     <!-- Navigation -->
@@ -58,7 +59,15 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-image fade-in">
-                    <img src="https://github.com/d-alleyne.png" alt="Damien Alleyne Profile Picture" class="profile-pic">
+                    <div class="profile-pic-container">
+                        <img src="https://github.com/d-alleyne.png" 
+                             alt="Damien Alleyne Profile Picture" 
+                             class="profile-pic"
+                             loading="eager"
+                             decoding="async"
+                             onload="this.style.opacity='1'"
+                             onerror="this.style.opacity='1'">
+                    </div>
                 </div>
                 <div class="hero-text">
                     <h1 class="hero-name fade-in">Damien Alleyne</h1>
