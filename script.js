@@ -441,6 +441,64 @@ class PerformanceOptimizer {
     }
 }
 
+// Mobile-only Floating CTA
+class MobileFloatingCTA {
+    constructor() {
+        this.mobileFloatingCta = document.getElementById('mobileFloatingCta');
+        this.init();
+    }
+    
+    init() {
+        if (!this.mobileFloatingCta) return;
+        
+        // Always add event listeners, but check screen size in handlers
+        window.addEventListener('scroll', () => this.handleScroll());
+        window.addEventListener('resize', () => this.handleResize());
+        
+        // Initial check
+        this.handleScroll();
+    }
+    
+    isMobileScreen() {
+        return window.innerWidth <= 768;
+    }
+    
+    handleScroll() {
+        const scrollY = window.pageYOffset;
+        const windowHeight = window.innerHeight;
+        const showThreshold = 100;
+        
+        // Only show on mobile screens
+        if (!this.isMobileScreen()) {
+            this.mobileFloatingCta.classList.remove('visible');
+            return;
+        }
+        
+        // Check if contact section is visible
+        const contactSection = document.getElementById('contact');
+        if (contactSection) {
+            const contactRect = contactSection.getBoundingClientRect();
+            const isContactVisible = contactRect.top < windowHeight && contactRect.bottom > 0;
+            
+            if (isContactVisible) {
+                this.mobileFloatingCta.classList.remove('visible');
+                return;
+            }
+        }
+        
+        if (scrollY > showThreshold) {
+            this.mobileFloatingCta.classList.add('visible');
+        } else {
+            this.mobileFloatingCta.classList.remove('visible');
+        }
+    }
+    
+    handleResize() {
+        // Re-evaluate on resize
+        this.handleScroll();
+    }
+}
+
 // Initialize all modules when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize core functionality
@@ -452,6 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize enhancements
     new AnimationObserver();
     new PerformanceOptimizer();
+    new MobileFloatingCTA();
     
     // Add keyboard navigation support
     document.addEventListener('keydown', (e) => {
