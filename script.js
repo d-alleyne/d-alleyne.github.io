@@ -501,6 +501,9 @@ class MobileFloatingCTA {
 
 // Initialize all modules when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
     // Initialize core functionality
     new ThemeManager();
     new MobileNavigation();
