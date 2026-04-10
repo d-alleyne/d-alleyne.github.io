@@ -502,7 +502,7 @@ class MobileFloatingCTA {
 // Ask Damien AI Chat
 class AskDamien {
     constructor() {
-        this.API_URL = 'https://ask-damien.alleyne.dev';
+        this.API_URL = 'https://ask-damien.yellow-glitter-8c53.workers.dev';
         this.mode = 'ask';
         this.conversation = [];
         this.isLoading = false;
