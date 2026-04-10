@@ -1,1 +1,7 @@
 replit.md
+.gstack/
+.claude/
+worker/
+corpus
+data/
+docs/

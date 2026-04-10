@@ -3,7 +3,7 @@ class ThemeManager {
     constructor() {
         this.themeToggle = document.getElementById('themeToggle');
         this.themeIcon = this.themeToggle.querySelector('.theme-icon');
-        this.currentTheme = localStorage.getItem('theme') || 'light';
+        this.currentTheme = localStorage.getItem('theme') || 'dark';
         
         this.init();
     }
@@ -499,6 +499,362 @@ class MobileFloatingCTA {
     }
 }
 
+// Ask Damien AI Chat
+class AskDamien {
+    constructor() {
+        this.API_URL = 'https://ask-damien.alleyne.dev';
+        this.mode = 'ask';
+        this.conversation = [];
+        this.isLoading = false;
+        this.maxTurns = 3;
+
+        this.tabs = document.querySelectorAll('.ask-tab');
+        this.chips = document.querySelectorAll('.ask-chip');
+        this.chipsContainer = document.getElementById('askChips');
+        this.inputArea = document.getElementById('askInputArea');
+        this.jdArea = document.getElementById('askJdArea');
+        this.input = document.getElementById('askInput');
+        this.jdInput = document.getElementById('askJdInput');
+        this.sendBtn = document.getElementById('askSend');
+        this.jdSendBtn = document.getElementById('askJdSend');
+        this.conversationEl = document.getElementById('askConversation');
+        this.charCount = document.getElementById('askCharCount');
+        this.jdCharCount = document.getElementById('askJdCharCount');
+        this.statusEl = document.getElementById('askStatus');
+
+        this.init();
+    }
+
+    init() {
+        this.tabs.forEach(tab => {
+            tab.addEventListener('click', () => this.switchMode(tab.dataset.mode));
+        });
+
+        this.chips.forEach(chip => {
+            chip.addEventListener('click', () => this.askQuestion(chip.textContent));
+        });
+
+        this.sendBtn.addEventListener('click', () => this.submitQuestion());
+        this.jdSendBtn.addEventListener('click', () => this.submitJd());
+
+        this.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.submitQuestion();
+            }
+        });
+
+        this.input.addEventListener('input', () => this.updateCharCount(this.input, this.charCount, 2000));
+        this.jdInput.addEventListener('input', () => this.updateCharCount(this.jdInput, this.jdCharCount, 5000));
+
+        this.restoreConversation();
+    }
+
+    switchMode(mode) {
+        this.mode = mode;
+        this.tabs.forEach(tab => {
+            const isActive = tab.dataset.mode === mode;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', isActive);
+        });
+
+        if (mode === 'ask') {
+            this.inputArea.style.display = 'flex';
+            this.jdArea.style.display = 'none';
+            this.chipsContainer.style.display = 'flex';
+        } else {
+            this.inputArea.style.display = 'none';
+            this.jdArea.style.display = 'block';
+            this.chipsContainer.style.display = 'none';
+        }
+    }
+
+    updateCharCount(inputEl, countEl, max) {
+        const len = inputEl.value.length;
+        if (len > max * 0.8) {
+            countEl.textContent = `${len}/${max}`;
+            countEl.classList.toggle('warn', len > max * 0.95);
+        } else {
+            countEl.textContent = '';
+        }
+    }
+
+    submitQuestion() {
+        const question = this.input.value.trim();
+        if (!question || this.isLoading) return;
+        this.input.value = '';
+        this.charCount.textContent = '';
+        this.askQuestion(question);
+    }
+
+    submitJd() {
+        const jd = this.jdInput.value.trim();
+        if (!jd || this.isLoading) return;
+        this.askQuestion(jd, true);
+    }
+
+    async askQuestion(question, isJd = false) {
+        if (this.isLoading) return;
+        this.isLoading = true;
+        this.setButtonsDisabled(true);
+
+        this.addMessage('user', isJd ? 'Analyze this job description for fit:' : question);
+        this.showTypingIndicator();
+
+        const history = this.conversation.slice(-this.maxTurns * 2);
+
+        try {
+            await this.askWorker(question, isJd, history);
+        } catch (err) {
+            this.removeTypingIndicator();
+            if (err.name === 'AbortError') {
+                this.addMessage('error', 'Response timed out. Try a simpler question.');
+            } else {
+                this.addMessage('error', 'This feature is temporarily unavailable. Please try again later.');
+            }
+        } finally {
+            this.isLoading = false;
+            this.setButtonsDisabled(false);
+            this.input.focus();
+            this.saveConversation();
+        }
+    }
+
+    async askWorker(question, isJd, history) {
+        const response = await fetch(`${this.API_URL}/ask`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                question: question,
+                is_jd: isJd,
+                history: history
+            })
+        });
+
+        if (response.status === 429) {
+            this.removeTypingIndicator();
+            this.addMessage('error', "You've reached the question limit (10/hour). Please try again later.");
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+
+        if (contentType.includes('text/event-stream')) {
+            await this.handleStream(response);
+        } else {
+            const data = await response.json();
+            this.removeTypingIndicator();
+            this.addMessage('bot', data.answer || data.message || 'No response received.');
+        }
+    }
+
+    async handleStream(response) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let botText = '';
+        let buffer = '';
+
+        this.removeTypingIndicator();
+        const msgEl = this.addMessage('bot', '');
+
+        try {
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.slice(6);
+                        if (data === '[DONE]') break;
+                        try {
+                            const parsed = JSON.parse(data);
+                            const content = parsed.token || '';
+                            if (content) {
+                                botText += content;
+                                msgEl.innerHTML = this.formatResponse(botText);
+                                this.scrollToBottomThrottled();
+                            }
+                            if (parsed.error) {
+                                msgEl.innerHTML = this.formatResponse(parsed.error);
+                            }
+                        } catch {
+                            // Non-JSON chunk, skip
+                        }
+                    }
+                }
+            }
+        } catch (err) {
+            if (!botText) {
+                msgEl.innerHTML = 'Response interrupted. Try again.';
+            }
+        }
+
+        this.conversation.push({ role: 'assistant', content: botText });
+    }
+
+    addMessage(type, content) {
+        const msgEl = document.createElement('div');
+
+        if (type === 'user') {
+            msgEl.className = 'ask-msg ask-msg-user';
+            msgEl.textContent = content;
+            this.conversation.push({ role: 'user', content: content });
+        } else if (type === 'bot') {
+            msgEl.className = 'ask-msg ask-msg-bot';
+            msgEl.innerHTML = content ? this.formatResponse(content) : '';
+            if (content) {
+                this.conversation.push({ role: 'assistant', content: content });
+            }
+        } else if (type === 'error') {
+            msgEl.className = 'ask-msg ask-msg-error';
+            msgEl.textContent = content;
+        }
+
+        this.conversationEl.appendChild(msgEl);
+        this.scrollToBottom();
+        return msgEl;
+    }
+
+    formatResponse(text) {
+        let html = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        // Markdown tables
+        html = html.replace(/((?:^\|.+\|$\n?)+)/gm, (tableBlock) => {
+            const rows = tableBlock.trim().split('\n').filter(r => r.trim());
+            if (rows.length < 2) return tableBlock;
+
+            let table = '<table class="ask-table">';
+            let headerDone = false;
+            rows.forEach((row) => {
+                // Skip separator rows (|---|---|)
+                if (/^\|[\s\-:|]+\|$/.test(row)) return;
+                const cells = row.split('|').filter(c => c !== '').map(c => c.trim());
+                if (!cells.length) return;
+                const tag = !headerDone ? 'th' : 'td';
+                table += '<tr>' + cells.map(c => `<${tag}>${c}</${tag}>`).join('') + '</tr>';
+                if (!headerDone) headerDone = true;
+            });
+            table += '</table>';
+            return table;
+        });
+
+        // Horizontal rules
+        html = html.replace(/^---+$/gm, '<hr class="ask-hr">');
+
+        // Headings
+        html = html.replace(/^####\s+(.+)$/gm, '<h6>$1</h6>');
+        html = html.replace(/^###\s+(.+)$/gm, '<h5>$1</h5>');
+        html = html.replace(/^##\s+(.+)$/gm, '<h4>$1</h4>');
+
+        // Bullet lists (must run before bold/italic since * conflicts)
+        html = html.replace(/^[*\-•]\s+(.+)$/gm, '<li>$1</li>');
+        html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+
+        // Match verdicts (before bold processing eats the **)
+        html = html.replace(/\*{0,2}Strong match\.?\*{0,2}/g, '<span class="ask-verdict ask-verdict-strong">Strong match</span>');
+        html = html.replace(/\*{0,2}Partial match\.?\*{0,2}/g, '<span class="ask-verdict ask-verdict-partial">Partial match</span>');
+        html = html.replace(/\*{0,2}No evidence\.?\*{0,2}/g, '<span class="ask-verdict ask-verdict-none">No evidence</span>');
+
+        // Bold and italic
+        html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+        // Inline code
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+        // Paragraphs
+        html = html.replace(/\n\n+/g, '</p><p>');
+        html = '<p>' + html + '</p>';
+        html = html.replace(/<p>\s*<\/p>/g, '');
+        html = html.replace(/<p>(<ul>)/g, '$1');
+        html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<table)/g, '$1');
+        html = html.replace(/(<\/table>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<h[456]>)/g, '$1');
+        html = html.replace(/(<\/h[456]>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<hr[^>]*>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<hr[^>]*>)/g, '$1');
+        html = html.replace(/(<hr[^>]*>)<\/p>/g, '$1');
+
+        return html;
+    }
+
+    showTypingIndicator() {
+        const el = document.createElement('div');
+        el.className = 'ask-msg ask-msg-loading';
+        el.id = 'askTyping';
+        el.innerHTML = '<div class="ask-typing-indicator"><span class="ask-typing-dot"></span><span class="ask-typing-dot"></span><span class="ask-typing-dot"></span></div>';
+        this.conversationEl.appendChild(el);
+        this.scrollToBottom();
+    }
+
+    removeTypingIndicator() {
+        const el = document.getElementById('askTyping');
+        if (el) el.remove();
+    }
+
+    scrollToBottom() {
+        const last = this.conversationEl.lastElementChild;
+        if (last) {
+            last.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+    }
+
+    scrollToBottomThrottled() {
+        if (this._scrollTimer) return;
+        this._scrollTimer = setTimeout(() => {
+            this.scrollToBottom();
+            this._scrollTimer = null;
+        }, 150);
+    }
+
+    setButtonsDisabled(disabled) {
+        this.sendBtn.disabled = disabled;
+        this.jdSendBtn.disabled = disabled;
+        this.chips.forEach(c => c.disabled = disabled);
+    }
+
+    saveConversation() {
+        try {
+            const toSave = this.conversation.slice(-this.maxTurns * 2);
+            sessionStorage.setItem('askDamien', JSON.stringify(toSave));
+        } catch {}
+    }
+
+    restoreConversation() {
+        try {
+            const saved = sessionStorage.getItem('askDamien');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                parsed.forEach(msg => {
+                    const el = document.createElement('div');
+                    if (msg.role === 'user') {
+                        el.className = 'ask-msg ask-msg-user';
+                        el.textContent = msg.content;
+                    } else {
+                        el.className = 'ask-msg ask-msg-bot';
+                        el.innerHTML = this.formatResponse(msg.content);
+                    }
+                    this.conversationEl.appendChild(el);
+                });
+                this.conversation = parsed;
+            }
+        } catch {}
+    }
+}
+
 // Initialize all modules when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Set current year in footer
@@ -514,6 +870,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new AnimationObserver();
     new PerformanceOptimizer();
     new MobileFloatingCTA();
+    new AskDamien();
     
     // Add keyboard navigation support
     document.addEventListener('keydown', (e) => {
