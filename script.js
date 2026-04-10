@@ -547,7 +547,6 @@ class AskDamien {
         this.input.addEventListener('input', () => this.updateCharCount(this.input, this.charCount, 2000));
         this.jdInput.addEventListener('input', () => this.updateCharCount(this.jdInput, this.jdCharCount, 5000));
 
-        this.restoreConversation();
     }
 
     switchMode(mode) {
@@ -616,7 +615,6 @@ class AskDamien {
             this.isLoading = false;
             this.setButtonsDisabled(false);
             this.input.focus();
-            this.saveConversation();
         }
     }
 
@@ -826,33 +824,6 @@ class AskDamien {
         this.chips.forEach(c => c.disabled = disabled);
     }
 
-    saveConversation() {
-        try {
-            const toSave = this.conversation.slice(-this.maxTurns * 2);
-            sessionStorage.setItem('askDamien', JSON.stringify(toSave));
-        } catch {}
-    }
-
-    restoreConversation() {
-        try {
-            const saved = sessionStorage.getItem('askDamien');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                parsed.forEach(msg => {
-                    const el = document.createElement('div');
-                    if (msg.role === 'user') {
-                        el.className = 'ask-msg ask-msg-user';
-                        el.textContent = msg.content;
-                    } else {
-                        el.className = 'ask-msg ask-msg-bot';
-                        el.innerHTML = this.formatResponse(msg.content);
-                    }
-                    this.conversationEl.appendChild(el);
-                });
-                this.conversation = parsed;
-            }
-        } catch {}
-    }
 }
 
 // Initialize all modules when DOM is loaded
