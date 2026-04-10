@@ -429,6 +429,16 @@ section { padding: 100px 0; }
     border-radius: 4px;
 }
 
+.ask-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+.ask-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
 .ask-msg-error {
     background: rgba(239, 68, 68, 0.06);
     box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.15);

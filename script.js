@@ -727,6 +727,24 @@ class AskDamien {
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
 
+        // URLs to links (restricted to known safe domains)
+        const safeDomains = ['alleyne.dev', 'bankinginbim.com', 'github.com/d-alleyne', 'linkedin.com/in/damienalleyne', 'blog.alleyne.dev', 'jobs.alleyne.dev', 'app.bankinginbim.com'];
+        const linkify = (url) => {
+            try {
+                const hostname = new URL(url).hostname;
+                const isSafe = safeDomains.some(d => hostname === d || hostname.endsWith('.' + d) || url.includes(d));
+                return isSafe ? `<a href="${url}" target="_blank" rel="noopener" class="ask-link">${url}</a>` : url;
+            } catch { return url; }
+        };
+        html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, (_, text, url) => {
+            try {
+                const hostname = new URL(url).hostname;
+                const isSafe = safeDomains.some(d => hostname === d || hostname.endsWith('.' + d) || url.includes(d));
+                return isSafe ? `<a href="${url}" target="_blank" rel="noopener" class="ask-link">${text}</a>` : text;
+            } catch { return text; }
+        });
+        html = html.replace(/(^|[\s(])(https?:\/\/[^\s)<]+)/g, (_, pre, url) => pre + linkify(url));
+
         // Markdown tables
         html = html.replace(/((?:^\|.+\|$\n?)+)/gm, (tableBlock) => {
             const rows = tableBlock.trim().split('\n').filter(r => r.trim());
