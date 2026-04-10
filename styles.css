@@ -186,6 +186,7 @@ body {
     display: flex;
     gap: 12px;
     margin-top: 24px;
+    justify-content: center;
 }
 
 /* ── Buttons ── */
