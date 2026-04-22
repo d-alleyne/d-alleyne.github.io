@@ -5,3 +5,5 @@ worker/
 corpus
 data/
 docs/
+DESIGN.private.md
+CLAUDE.md
