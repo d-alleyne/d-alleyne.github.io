@@ -284,7 +284,7 @@ class ContactForm {
     
     setLoadingState(loading) {
         if (loading) {
-            this.submitButton.textContent = 'Sending...';
+            this.submitButton.textContent = 'Sending…';
             this.submitButton.disabled = true;
             this.submitButton.style.opacity = '0.7';
         } else {
