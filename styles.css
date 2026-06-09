@@ -112,12 +112,18 @@ body {
     border-radius: 6px;
     padding: 6px 10px;
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.15s;
+    color: var(--text-secondary);
+    transition: box-shadow 0.15s, color 0.15s;
     display: flex;
     align-items: center;
 }
-.theme-toggle:hover { box-shadow: var(--border-hover) 0px 0px 0px 1px; }
+.theme-toggle:hover {
+    box-shadow: var(--border-hover) 0px 0px 0px 1px;
+    color: var(--text-primary);
+}
+.theme-icon { display: block; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun { display: none; }
 
 .nav-toggle {
     display: none;

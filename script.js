@@ -2,7 +2,6 @@
 class ThemeManager {
     constructor() {
         this.themeToggle = document.getElementById('themeToggle');
-        this.themeIcon = this.themeToggle.querySelector('.theme-icon');
         this.currentTheme = localStorage.getItem('theme') || 'dark';
         
         this.init();
@@ -18,7 +17,6 @@ class ThemeManager {
     
     setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        this.themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
         localStorage.setItem('theme', theme);
         this.currentTheme = theme;
     }
