@@ -141,7 +141,7 @@ body {
     width: 20px;
     height: 2px;
     background: var(--text-primary);
-    transition: all 0.2s;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
 /* ── Hero ── */
@@ -213,7 +213,7 @@ body {
     border-radius: 6px;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
     border: none;
 }
 
@@ -289,7 +289,7 @@ section { padding: 100px 0; }
     border: none;
     border-bottom: 2px solid transparent;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: color 0.15s, border-color 0.15s;
 }
 .ask-tab:hover { color: var(--text-secondary); }
 .ask-tab.active {
@@ -314,7 +314,7 @@ section { padding: 100px 0; }
     border: none;
     box-shadow: var(--shadow-border);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: color 0.15s, box-shadow 0.15s;
 }
 .ask-chip:hover {
     color: var(--accent);
@@ -339,7 +339,7 @@ section { padding: 100px 0; }
     border-radius: 6px;
     box-shadow: var(--shadow-border);
     outline: none;
-    transition: all 0.15s;
+    transition: box-shadow 0.15s;
 }
 .ask-input:focus { box-shadow: 0 0 0 2px var(--accent); }
 .ask-input::placeholder { color: var(--text-muted); }
@@ -354,7 +354,7 @@ section { padding: 100px 0; }
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: background 0.15s, opacity 0.15s;
     white-space: nowrap;
 }
 .ask-send:hover { background: var(--accent-hover); }
@@ -383,7 +383,7 @@ section { padding: 100px 0; }
     border-radius: 6px;
     box-shadow: var(--shadow-border);
     outline: none;
-    transition: all 0.15s;
+    transition: box-shadow 0.15s;
     resize: vertical;
     min-height: 120px;
 }
@@ -537,7 +537,7 @@ section { padding: 100px 0; }
     color: inherit;
     display: block;
     position: relative;
-    transition: all 0.2s;
+    transition: box-shadow 0.2s, transform 0.2s;
 }
 .building-card:hover {
     box-shadow: var(--border-hover) 0px 0px 0px 1px, rgba(0,0,0,0.2) 0px 4px 12px;
@@ -626,7 +626,7 @@ section { padding: 100px 0; }
     display: block;
     position: relative;
     box-shadow: var(--shadow-card);
-    transition: all 0.2s;
+    transition: box-shadow 0.2s, transform 0.2s;
 }
 .link-card:hover {
     box-shadow: var(--border-hover) 0px 0px 0px 1px, rgba(0,0,0,0.2) 0px 4px 12px;
@@ -720,7 +720,7 @@ section { padding: 100px 0; }
     border-radius: 6px;
     box-shadow: var(--shadow-border);
     outline: none;
-    transition: all 0.15s;
+    transition: box-shadow 0.15s;
 }
 .form-group input:focus,
 .form-group textarea:focus {
@@ -802,7 +802,7 @@ section { padding: 100px 0; }
         background: var(--bg);
         width: 100%;
         text-align: center;
-        transition: all 0.3s;
+        transition: left 0.3s;
         padding: 24px;
         border-bottom: 1px solid var(--border);
     }
