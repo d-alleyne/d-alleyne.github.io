@@ -251,6 +251,8 @@ section { padding: 100px 0; }
     margin: 0 auto;
 }
 
+.ask-damien .section-title { margin-bottom: 12px; }
+
 .ask-label {
     font-family: 'Geist Mono', monospace;
     font-size: 11px;
