@@ -4,6 +4,7 @@
 
 /* ── Theme Variables ── */
 [data-theme="dark"] {
+    color-scheme: dark;
     --bg: #0f1012;
     --bg-surface: #171717;
     --bg-elevated: #1e1f22;
@@ -24,6 +25,7 @@
 }
 
 [data-theme="light"] {
+    color-scheme: light;
     --bg: #fafafa;
     --bg-surface: #ffffff;
     --bg-elevated: #f5f5f5;
