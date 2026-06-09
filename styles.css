@@ -819,6 +819,7 @@ section { padding: 100px 0; }
     .ask-msg-user { margin-left: 24px; }
     .ask-msg-bot { margin-right: 24px; }
     .ask-char-count { display: none; }
+    .ask-chip { padding: 10px 14px; }
 
     .contact-item { flex-direction: column; gap: 4px; }
     .contact-label { min-width: auto; }
