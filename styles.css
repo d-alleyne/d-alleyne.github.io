@@ -779,8 +779,8 @@ section { padding: 100px 0; }
 /* ── Animations ── */
 .fade-in {
     opacity: 0;
-    transform: translateY(12px);
-    animation: fadeInUp 0.6s ease forwards;
+    transform: translateY(8px);
+    animation: fadeInUp 0.25s ease-out forwards;
 }
 .fade-in:nth-child(1) { animation-delay: 0.1s; }
 .fade-in:nth-child(2) { animation-delay: 0.2s; }
