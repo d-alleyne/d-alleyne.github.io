@@ -102,6 +102,7 @@ body {
     transition: color 0.15s;
 }
 .nav-link:hover { color: var(--text-primary); }
+.nav-link.active { color: var(--text-primary); }
 .nav-link-accent { color: var(--accent); }
 .nav-link-accent:hover { color: var(--accent-hover); }
 
