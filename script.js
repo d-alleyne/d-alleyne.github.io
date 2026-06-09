@@ -255,28 +255,29 @@ class ContactForm {
     }
     
     showFieldError(field, message) {
-        field.style.borderColor = '#ef4444';
-        
+        field.classList.add('field-error');
+        field.setAttribute('aria-invalid', 'true');
+
         // Remove existing error message
         const existingError = field.parentNode.querySelector('.error-message');
         if (existingError) {
             existingError.remove();
         }
-        
+
         // Add new error message
         const errorElement = document.createElement('span');
         errorElement.className = 'error-message';
+        errorElement.id = `${field.id}-error`;
         errorElement.textContent = message;
-        errorElement.style.color = '#ef4444';
-        errorElement.style.fontSize = '0.875rem';
-        errorElement.style.marginTop = '0.25rem';
-        errorElement.style.display = 'block';
-        
+        field.setAttribute('aria-describedby', errorElement.id);
+
         field.parentNode.appendChild(errorElement);
     }
-    
+
     clearFieldError(field) {
-        field.style.borderColor = '';
+        field.classList.remove('field-error');
+        field.removeAttribute('aria-invalid');
+        field.removeAttribute('aria-describedby');
         const errorMessage = field.parentNode.querySelector('.error-message');
         if (errorMessage) {
             errorMessage.remove();
@@ -309,24 +310,9 @@ class ContactForm {
         existingMessages.forEach(msg => msg.remove());
         
         const messageElement = document.createElement('div');
-        messageElement.className = 'form-message';
+        messageElement.className = `form-message form-message-${type}`;
         messageElement.textContent = message;
-        
-        messageElement.style.padding = '1rem';
-        messageElement.style.borderRadius = '8px';
-        messageElement.style.marginTop = '1rem';
-        messageElement.style.fontWeight = '500';
-        
-        if (type === 'success') {
-            messageElement.style.backgroundColor = '#dcfce7';
-            messageElement.style.color = '#166534';
-            messageElement.style.border = '1px solid #bbf7d0';
-        } else {
-            messageElement.style.backgroundColor = '#fef2f2';
-            messageElement.style.color = '#dc2626';
-            messageElement.style.border = '1px solid #fecaca';
-        }
-        
+
         this.form.appendChild(messageElement);
         
         // Auto-remove success messages after 5 seconds
