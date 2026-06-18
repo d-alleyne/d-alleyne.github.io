@@ -530,15 +530,41 @@ section { padding: 100px 0; }
 
 .building-card {
     background: var(--bg-surface);
-    padding: 28px;
     border-radius: 12px;
     box-shadow: var(--shadow-card);
     text-decoration: none;
     color: inherit;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     position: relative;
     transition: box-shadow 0.2s, transform 0.2s;
 }
+
+.card-thumb {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    box-shadow: var(--border) 0px -1px 0px 0px inset;
+}
+.card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+.card-thumb-diagram { display: flex; align-items: center; justify-content: center; }
+.card-thumb-diagram svg { width: 68%; height: auto; }
+
+/* Theme-matched screenshots: dark shown by default, light when site is in light mode */
+.card-thumb .thumb-light { display: none; }
+.card-thumb .thumb-dark { display: block; }
+[data-theme="light"] .card-thumb .thumb-light { display: block; }
+[data-theme="light"] .card-thumb .thumb-dark { display: none; }
+
+.card-body { padding: 24px 28px 28px; }
 .building-card:hover {
     box-shadow: var(--border-hover) 0px 0px 0px 1px, rgba(0,0,0,0.2) 0px 4px 12px;
     transform: translateY(-2px);
@@ -556,6 +582,21 @@ section { padding: 100px 0; }
     transition: color 0.15s;
 }
 .building-card:hover .card-external-link { color: var(--accent); }
+
+.card-thumb .card-external-link {
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-card);
+}
 
 .building-card h3 {
     font-size: 18px;
@@ -833,7 +874,8 @@ section { padding: 100px 0; }
 @media (max-width: 480px) {
     .hero-name { font-size: 32px; }
     .section-title { font-size: 24px; }
-    .building-card, .link-card, .contact-form { padding: 20px; }
+    .link-card, .contact-form { padding: 20px; }
+    .building-card .card-body { padding: 20px; }
 }
 
 /* ── Accessibility ── */
