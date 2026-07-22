@@ -175,23 +175,40 @@
                 </a>
                 <div class="building-card building-card-non-clickable">
                     <div class="card-thumb card-thumb-diagram">
-                        <svg viewBox="0 0 320 200" fill="none" role="img" aria-label="Abstract diagram of an automation workflow" preserveAspectRatio="xMidYMid meet">
-                            <line x1="74" y1="100" x2="128" y2="60" stroke="var(--border-hover)" stroke-width="2"/>
-                            <line x1="74" y1="100" x2="128" y2="140" stroke="var(--border-hover)" stroke-width="2"/>
-                            <line x1="192" y1="60" x2="246" y2="100" stroke="var(--border-hover)" stroke-width="2"/>
-                            <line x1="192" y1="140" x2="246" y2="100" stroke="var(--border-hover)" stroke-width="2"/>
-                            <rect x="34" y="84" width="40" height="32" rx="6" fill="var(--bg-surface)" stroke="var(--border-hover)" stroke-width="2"/>
-                            <rect x="128" y="44" width="64" height="32" rx="6" fill="var(--bg-surface)" stroke="var(--accent)" stroke-width="2"/>
-                            <rect x="128" y="124" width="64" height="32" rx="6" fill="var(--bg-surface)" stroke="var(--border-hover)" stroke-width="2"/>
-                            <rect x="246" y="84" width="40" height="32" rx="6" fill="var(--bg-surface)" stroke="var(--accent)" stroke-width="2"/>
-                            <circle cx="160" cy="60" r="4" fill="var(--accent)"/>
-                            <circle cx="266" cy="100" r="4" fill="var(--accent)"/>
+                        <svg viewBox="0 0 320 200" fill="none" role="img" aria-label="Automation reading a calendar and task list through an LLM into a daily brief" preserveAspectRatio="xMidYMid meet">
+                            <path d="M 80 60 C 120 60, 120 100, 136 100" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M 80 140 C 120 140, 120 100, 136 100" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <line x1="184" y1="100" x2="240" y2="100" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
+                            <rect x="40" y="40" width="40" height="40" rx="6" fill="var(--bg-surface)" stroke="var(--border-hover)" stroke-width="2"/>
+                            <line x1="40" y1="52" x2="80" y2="52" stroke="var(--border-hover)" stroke-width="2"/>
+                            <line x1="50" y1="36" x2="50" y2="42" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="70" y1="36" x2="70" y2="42" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="50" cy="62" r="2" fill="var(--border-hover)"/>
+                            <circle cx="60" cy="62" r="2" fill="var(--border-hover)"/>
+                            <circle cx="70" cy="62" r="2" fill="var(--border-hover)"/>
+                            <circle cx="50" cy="71" r="2" fill="var(--border-hover)"/>
+                            <circle cx="60" cy="71" r="2" fill="var(--accent)"/>
+                            <circle cx="70" cy="71" r="2" fill="var(--border-hover)"/>
+                            <rect x="40" y="120" width="40" height="40" rx="6" fill="var(--bg-surface)" stroke="var(--border-hover)" stroke-width="2"/>
+                            <path d="M 47 131 l 2 2 l 4 -4" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <line x1="58" y1="131" x2="72" y2="131" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M 47 141 l 2 2 l 4 -4" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <line x1="58" y1="141" x2="72" y2="141" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M 47 151 l 2 2 l 4 -4" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <line x1="58" y1="151" x2="68" y2="151" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="160" cy="100" r="24" fill="var(--bg-surface)" stroke="var(--accent)" stroke-width="2"/>
+                            <path d="M 160 88 C 160 94 163 97 169 97 C 163 97 160 100 160 106 C 160 100 157 97 151 97 C 157 97 160 94 160 88 Z" fill="var(--accent)"/>
+                            <path d="M 170 87 C 170 89 171 90 173 90 C 171 90 170 91 170 93 C 170 91 169 90 167 90 C 169 90 170 89 170 87 Z" fill="var(--accent)" opacity="0.75"/>
+                            <rect x="240" y="75" width="40" height="50" rx="6" fill="var(--bg-surface)" stroke="var(--border-hover)" stroke-width="2"/>
+                            <line x1="248" y1="87" x2="272" y2="87" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="248" y1="97" x2="272" y2="97" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="248" y1="107" x2="264" y2="107" stroke="var(--border-hover)" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                     </div>
                     <div class="card-body">
-                        <h3>Proposal Workflow</h3>
-                        <p>n8n workflow automating client proposal generation with GPT-4 Vision and Claude. Reduced turnaround from days to hours.</p>
-                        <div class="tech-stack">n8n · GPT-4 Vision · Claude API</div>
+                        <h3>Client Automation</h3>
+                        <p>A scheduled Make automation for a consulting client: it reads their calendar and tasks, runs them through an LLM, and sends a daily priority brief, running in the client's own workspace.</p>
+                        <div class="tech-stack">Make · OpenAI</div>
                     </div>
                 </div>
             </div>
@@ -214,6 +231,7 @@
                     <span class="tech-badge">WordPress</span>
                     <span class="tech-badge">Docker</span>
                     <span class="tech-badge">n8n</span>
+                    <span class="tech-badge">Make</span>
                     <span class="tech-badge">Cloudflare Workers</span>
                 </div>
             </div>
